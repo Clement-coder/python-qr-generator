@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>QR Code Generator</title>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-6 text-center">QR Code Generator</h1>
+        <div class="mb-4">
+            <label for="text-input" class="block text-gray-700 text-sm font-bold mb-2">Enter text or URL:</label>
+            <input type="text" id="text-input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="https://example.com">
+        </div>
+        <button id="generate-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full focus:outline-none focus:shadow-outline">
+            Generate QR Code
+        </button>
+        <div id="qrcode-container" class="mt-6 flex justify-center">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('generate-btn').addEventListener('click', function() {
+            var text = document.getElementById('text-input').value;
+            if (text) {
+                fetch('/generate?text=' + encodeURIComponent(text))
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.qr_code_url) {
+                            var container = document.getElementById('qrcode-container');
+                            container.innerHTML = '<img src="' + data.qr_code_url + '?' + new Date().getTime() + '" alt="QR Code">';
+                        }        });
+            }
+        });
+    </script>
+</body>
+</html>
